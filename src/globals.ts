@@ -8,7 +8,7 @@ export const BASE_API_URL = "https://519assignment4.azurewebsites.net/api/";
 // You can get this from Piazza
 // This is a helper function to generate the headers with the x-functions-key attached
 
-export const getCode="Yt2rJ0q2lCtqTsjsiKbcUmG_6_5Pz4HfbDrrIrazEl93AzFu0jOx7w==";
+export const getCode='Yt2rJ0q2lCtqTsjsiKbcUmG_6_5Pz4HfbDrrIrazEl93AzFu0jOx7w==';
 
 export const postCode='OKv-EePp3jgVvEwp7npapgd66BMXkxErvTz9lWM7jFk0AzFuyHF4tg==';
 

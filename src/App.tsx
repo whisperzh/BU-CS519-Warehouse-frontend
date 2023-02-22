@@ -8,24 +8,47 @@ import {postCode,getCode,BASE_API_URL,GET_DEFAULT_HEADERS} from "./globals";
 import { IDisplayDataClass } from "./types/api_types";
 import {dummyData, GradeTable} from './components/GradeTable'
 import { text } from "stream/consumers";
+import axios from 'axios';
 
 function App() {
   // You will need to use more of these!
   const [displayDataList,setDisplayDataList]=useState<IDisplayDataClass[]>([]);
-  const [message, setMessage] = useState('');
   const [currClassTitle,setCurrClassTitle]=useState<string>("");
 
   const fetchShipmentDataById = async (id:string) => {
-    const res = await fetch(BASE_API_URL+'HttpGet'+'?'+new URLSearchParams({'code': getCode}), {
-      method: "GET",
-      headers:GET_DEFAULT_HEADERS(),
-    });
-    const json = await res.json();
-    setDisplayDataList(json)
+    const res= await axios.get(BASE_API_URL+"HttpGet",{
+      headers:{
+        "Access-Control-Allow-Origin":"https://portal.azure.com"
+      },
+      params: {
+        code: getCode,
+        ShipmentID:id
+      }
+    }
+    );
+    setDisplayDataList(res.data)
+    console.log(res.data);
+
   };
 
-//Yt2rJ0q2lCtqTsjsiKbcUmG_6_5Pz4HfbDrrIrazEl93AzFu0jOx7w==
-//OKv-EePp3jgVvEwp7npapgd66BMXkxErvTz9lWM7jFk0AzFuyHF4tg==
+  const collectAndPostShipmentData = async(id:string,po:string,wid:string,box:string,date:string)=>{
+    const res= await axios.post(BASE_API_URL+"insertData",
+    {    
+      "Date":date,
+      "WarehouseID":wid,
+      "ShippingPO":po,
+      "ShipmentID":id,
+      "BoxesRcvd":box},
+    {
+      params: {
+        code: postCode,
+      }
+
+    }
+    );
+    console.log(res);
+  }
+  
 
   /**
    * This is JUST an example of how you might fetch some data(with a different API).
@@ -43,16 +66,45 @@ function App() {
    */
 
   function searchID(){
-    console.log(message);
-    fetchShipmentDataById(message);
+    const id = (document.getElementById("searchId")as HTMLInputElement).value
+    fetchShipmentDataById(id);
   }
 
   function postData(){
 
+    const date=(document.getElementById("date")as HTMLInputElement).value;
+    const shipid=(document.getElementById("shipment_ID")as HTMLInputElement).value;
+    const shippo=(document.getElementById("shipping_PO")as HTMLInputElement).value;
+    const warehouseid=(document.getElementById("warehouse_ID")as HTMLInputElement).value;
+    const boxRec=(document.getElementById("boxes_Received")as HTMLInputElement).value;
+
+    if(date==""){
+      alert("Date is missing!");
+      return;
+    }
+
+    if(shipid==""){
+      alert("Shipment ID is missing!");
+      return;
+    }
+
+    if(shippo==""){
+      alert("Shipment PO is missing!");
+      return;
+    }
+
+    if(warehouseid==""){
+      alert("Warehouse ID is missing!");
+      return;
+    }
+
+    if(boxRec==""){
+      alert("Boxes Received is missing!");
+      return;
+    }
+    collectAndPostShipmentData(shipid,shippo,warehouseid,boxRec,date);
+    
   }
-  
-
-
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
