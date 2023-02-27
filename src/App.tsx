@@ -46,7 +46,8 @@ function App() {
 
     }
     );
-    console.log(res);
+    console.log(res.data);
+    alert(res.data)
   }
   
 
