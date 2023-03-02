@@ -6,15 +6,18 @@ import { Select, Typography, MenuItem, SelectChangeEvent } from "@mui/material";
  */
 import {postCode,getCode,BASE_API_URL,GET_DEFAULT_HEADERS} from "./globals";
 import { IDisplayDataClass } from "./types/api_types";
-import {dummyData, GradeTable} from './components/GradeTable'
+import {GradeTable} from './components/GradeTable'
 import { text } from "stream/consumers";
 import axios from 'axios';
+// import {getPassCodeFromKeyVault} from './keyVaultUtils'
 
 function App() {
   // You will need to use more of these!
   const [displayDataList,setDisplayDataList]=useState<IDisplayDataClass[]>([]);
   const [currClassTitle,setCurrClassTitle]=useState<string>("");
 
+  // useEffect(()=>{getPassCodeFromKeyVault();},[])
+  
   const fetchShipmentDataById = async (id:string) => {
     const res= await axios.get(BASE_API_URL+"HttpGet",{
       headers:{
@@ -22,7 +25,7 @@ function App() {
       },
       params: {
         code: getCode,
-        ShipmentID:id
+        ShipperID:id
       }
     }
     );
@@ -31,14 +34,15 @@ function App() {
 
   };
 
-  const collectAndPostShipmentData = async(id:string,po:string,wid:string,box:string,date:string)=>{
+  const collectAndPostShipmentData = async(id:string,po:string,wid:string,box:string,date:string,shipperID:string)=>{
     const res= await axios.post(BASE_API_URL+"insertData",
     {    
       "Date":date,
       "WarehouseID":wid,
       "ShippingPO":po,
       "ShipmentID":id,
-      "BoxesRcvd":box},
+      "BoxesRcvd":box,
+      "ShipperID":shipperID},
     {
       params: {
         code: postCode,
@@ -46,6 +50,7 @@ function App() {
 
     }
     );
+    console.log(res)
     console.log(res.data);
     alert(res.data)
   }
@@ -78,7 +83,7 @@ function App() {
     const shippo=(document.getElementById("shipping_PO")as HTMLInputElement).value;
     const warehouseid=(document.getElementById("warehouse_ID")as HTMLInputElement).value;
     const boxRec=(document.getElementById("boxes_Received")as HTMLInputElement).value;
-
+    const shipperID=(document.getElementById("ShipperID")as HTMLInputElement).value;
     if(date==""){
       alert("Date is missing!");
       return;
@@ -103,7 +108,11 @@ function App() {
       alert("Boxes Received is missing!");
       return;
     }
-    collectAndPostShipmentData(shipid,shippo,warehouseid,boxRec,date);
+    if(shipperID==""){
+      alert("shipper ID is missing!");
+      return;
+    }
+    collectAndPostShipmentData(shipid,shippo,warehouseid,boxRec,date,shipperID);
     
   }
 
@@ -118,10 +127,10 @@ function App() {
         </Grid>
         <Grid xs={12} md={4}>
           <Typography variant="h4" gutterBottom>
-            Enter a shipment number
+            Enter a Shipper ID
           </Typography>
           <div> 
-            <div>ShipmentID</div>
+            <div>Shipper ID</div>
             <input type="text" id="searchId" ></input>
           </div>
           <button onClick={searchID}>Search</button>
@@ -168,6 +177,10 @@ function App() {
             <input type="text" id="boxes_Received" ></input>
           </div>
 
+          <div> 
+            <div>Shipper ID</div>
+            <input type="text" id="ShipperID" ></input>
+          </div>
 
           <button onClick={postData}>Insert</button>
 

@@ -14,4 +14,5 @@ export interface IDisplayDataClass  {
   ShippingPO: string;
   ShipmentID: string;
   BoxesRcvd: number;
+  ShipperID: string;
 }

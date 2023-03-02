@@ -19,15 +19,15 @@ import TablePagination from '@mui/material/TablePagination';
  * this function and tested your project using it.
  */
 
-export function dummyData(): IDisplayDataClass[] {
-  return [{
-    Date: "Jan 06,2023",
-    WarehouseID: "808906090687765",
-    ShippingPO: "XXXXX90909090",
-    ShipmentID: "XXXXX90909090",
-    BoxesRcvd: 6,
-  }];
-}
+// export function dummyData(): IDisplayDataClass[] {
+//   return [{
+//     Date: "Jan 06,2023",
+//     WarehouseID: "808906090687765",
+//     ShippingPO: "XXXXX90909090",
+//     ShipmentID: "XXXXX90909090",
+//     BoxesRcvd: 6,
+//   }];
+// }
 
 /**
  * This is the component where you should write the code for displaying the
@@ -88,6 +88,8 @@ function BasicTable(rows:IDisplayDataClass[]) {
             <TableCell align="left">Shipping PO</TableCell>
             <TableCell align="left">Shipment ID</TableCell>
             <TableCell align="left">Boxes Received</TableCell>
+            <TableCell align="left">Shipper ID</TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
@@ -103,6 +105,8 @@ function BasicTable(rows:IDisplayDataClass[]) {
               <TableCell align="left">{row.ShippingPO}</TableCell>
               <TableCell align="left">{row.ShipmentID}</TableCell>
               <TableCell align="left">{row.BoxesRcvd}</TableCell>
+              <TableCell align="left">{row.ShipperID}</TableCell>
+
             </TableRow>
           ))}
         </TableBody>
