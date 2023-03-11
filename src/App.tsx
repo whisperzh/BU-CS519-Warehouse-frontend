@@ -1,22 +1,22 @@
-import React, {ChangeEvent, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Select, Typography, MenuItem, SelectChangeEvent } from "@mui/material";
+import {  Typography } from "@mui/material";
 /**
  * You will find globals from this file useful!
  */
-import {postCode,getCode,BASE_API_URL,GET_DEFAULT_HEADERS} from "./globals";
+import {BASE_API_URL} from "./globals";
 import { IDisplayDataClass } from "./types/api_types";
 import {GradeTable} from './components/GradeTable'
-import { text } from "stream/consumers";
 import axios from 'axios';
-// import {getPassCodeFromKeyVault} from './keyVaultUtils'
 
 function App() {
   // You will need to use more of these!
   const [displayDataList,setDisplayDataList]=useState<IDisplayDataClass[]>([]);
-  const [currClassTitle,setCurrClassTitle]=useState<string>("");
-
-  // useEffect(()=>{getPassCodeFromKeyVault();},[])
+  const [passCode,setpassCode]=useState<string>("")
+  useEffect(()=>{
+    var CONFIG = require('./config.json');
+    setpassCode(CONFIG.code);
+  },[]);
   
   const fetchShipmentDataById = async (id:string) => {
     const res= await axios.get(BASE_API_URL+"HttpGet",{
@@ -24,12 +24,12 @@ function App() {
         "Access-Control-Allow-Origin":"https://portal.azure.com"
       },
       params: {
-        code: getCode,
+        code: passCode,
         ShipperID:id
       }
     }
     );
-    setDisplayDataList(res.data)
+    setDisplayDataList([res.data])
     console.log(res.data);
 
   };
@@ -45,7 +45,7 @@ function App() {
       "ShipperID":shipperID},
     {
       params: {
-        code: postCode,
+        code: passCode,
       }
 
     }
